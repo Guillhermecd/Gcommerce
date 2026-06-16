@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.devsuperior.Gcommerce.entity.User;
 import com.devsuperior.Gcommerce.projection.UserDetalisProjection;
@@ -16,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             	INNER JOIN tb_role ON tb_role.id = tb_user_role.role_id
             	WHERE tb_user.email = :email
             """)
-    List<UserDetalisProjection> searchUserAndRolesByEmail(String email);
+    List<UserDetalisProjection> searchUserAndRolesByEmail(@Param("email") String email);
 
     User findByEmail(String email);
 
