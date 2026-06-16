@@ -1,22 +1,19 @@
 package com.devsuperior.Gcommerce.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Objects;
+
+import org.springframework.security.core.GrantedAuthority;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_role")
-public class Role {
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +21,6 @@ public class Role {
 
     @Column(unique = true, nullable = false)
     private String authority;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users = new HashSet<>();
 
     public Role() {
     }
@@ -45,6 +38,7 @@ public class Role {
         this.id = id;
     }
 
+    @Override
     public String getAuthority() {
         return authority;
     }
@@ -53,44 +47,17 @@ public class Role {
         this.authority = authority;
     }
 
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
-    public void addUser(User user) {
-        users.add(user);
-    }
-
-    public void removeUser(User user) {
-        users.remove(user);
-    }
-
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((authority == null) ? 0 : authority.hashCode());
-        return result;
+        return Objects.hashCode(id);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         Role other = (Role) obj;
-        if (authority == null) {
-            if (other.authority != null)
-                return false;
-        } else if (!authority.equals(other.authority))
-            return false;
-        return true;
+        return Objects.equals(id, other.id);
     }
 }
