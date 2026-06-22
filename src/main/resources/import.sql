@@ -2,7 +2,7 @@ INSERT INTO tb_category(name) VALUES ('Livros');
 INSERT INTO tb_category(name) VALUES ('Eletrônicos');
 INSERT INTO tb_category(name) VALUES ('Computadores');
 
-INSERT INTO tb_role (authority) VALUES ('ROLE_OPERATOR');
+INSERT INTO tb_role (authority) VALUES ('ROLE_CLIENT');
 INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');
 
 INSERT INTO tb_user (name, email, phone, password, birth_date) VALUES ('Maria Brown', 'maria@gmail.com', '988888888', '$2a$10$W3mUWVOgzHBm9uYDF03YSuRCQKws0nV3Fl5nVLCIT05e1iDCqY7aW', '2001-07-25');

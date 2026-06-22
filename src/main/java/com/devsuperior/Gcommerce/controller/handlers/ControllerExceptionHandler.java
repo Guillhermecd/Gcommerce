@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,7 +36,7 @@ public class ControllerExceptionHandler {
                         HttpServletRequest request) {
                 HttpStatus status = HttpStatus.NOT_FOUND;
                 CustomErrorDTO err = new CustomErrorDTO(
-                                Instant.now().toString(),
+                                Instant.now(),
                                 status.value(),
                                 e.getMessage(),
                                 request.getRequestURI());
@@ -50,9 +52,41 @@ public class ControllerExceptionHandler {
                         HttpServletRequest request) {
                 HttpStatus status = HttpStatus.BAD_REQUEST;
                 CustomErrorDTO err = new CustomErrorDTO(
-                                Instant.now().toString(),
+                                Instant.now(),
                                 status.value(),
                                 e.getMessage(),
+                                request.getRequestURI());
+                return ResponseEntity.status(status).body(err);
+        }
+
+        /**
+         * 401 Unauthorized
+         */
+        @ExceptionHandler(AuthenticationException.class)
+        public ResponseEntity<CustomErrorDTO> authenticationException(
+                        AuthenticationException e,
+                        HttpServletRequest request) {
+                HttpStatus status = HttpStatus.UNAUTHORIZED;
+                CustomErrorDTO err = new CustomErrorDTO(
+                                Instant.now(),
+                                status.value(),
+                                "Autenticação necessária para acessar este recurso",
+                                request.getRequestURI());
+                return ResponseEntity.status(status).body(err);
+        }
+
+        /**
+         * 403 Forbidden
+         */
+        @ExceptionHandler(AccessDeniedException.class)
+        public ResponseEntity<CustomErrorDTO> accessDeniedException(
+                        AccessDeniedException e,
+                        HttpServletRequest request) {
+                HttpStatus status = HttpStatus.FORBIDDEN;
+                CustomErrorDTO err = new CustomErrorDTO(
+                                Instant.now(),
+                                status.value(),
+                                "Você não tem permissão para acessar este recurso",
                                 request.getRequestURI());
                 return ResponseEntity.status(status).body(err);
         }
@@ -64,7 +98,7 @@ public class ControllerExceptionHandler {
                 logger.error("Erro inesperado: ", e);
                 HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
                 CustomErrorDTO err = new CustomErrorDTO(
-                                Instant.now().toString(),
+                                Instant.now(),
                                 status.value(),
                                 "Um erro inesperado ocorreu no servidor",
                                 request.getRequestURI());

@@ -16,10 +16,6 @@ public class CustomErrorDTO {
         this.path = path;
     }
 
-    public CustomErrorDTO(String string, int value, String message, String requestURI) {
-        // TODO Auto-generated constructor stub
-    }
-
     public Instant getTimestamp() {
         return timestamp;
     }

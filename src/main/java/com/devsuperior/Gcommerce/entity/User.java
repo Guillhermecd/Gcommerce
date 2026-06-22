@@ -22,6 +22,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+@SuppressWarnings("serial") 
 @Entity
 @Table(name = "tb_user")
 public class User implements UserDetails {
@@ -121,6 +122,15 @@ public class User implements UserDetails {
         roles.remove(role);
     }
 
+    public boolean hasRole(String roleName) {
+        for (Role role : roles) {
+            if (role.getAuthority().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
@@ -140,7 +150,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>(roles);
+        return roles;
     }
 
     @Override

@@ -1,9 +1,14 @@
 package com.devsuperior.Gcommerce.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.devsuperior.Gcommerce.entity.Category;
 import com.devsuperior.Gcommerce.entity.Product;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -25,6 +30,9 @@ public class ProductDTO {
 
     private String imgUrl;
 
+    @NotEmpty(message = "Pelo menos uma categoria deve ser associada ao produto")
+    private List<CategoryDTO> categories = new ArrayList<>();
+
     public ProductDTO() {
     }
 
@@ -42,6 +50,9 @@ public class ProductDTO {
         description = entity.getDescription();
         price = entity.getPrice();
         imgUrl = entity.getImgUrl();
+        for (Category cat : entity.getCategories()) {
+            categories.add(new CategoryDTO(cat));
+        }
     }
 
     public Long getId() {
@@ -62,5 +73,9 @@ public class ProductDTO {
 
     public String getImgUrl() {
         return imgUrl;
+    }
+
+    public List<CategoryDTO> getCategories() {
+        return categories;
     }
 }
