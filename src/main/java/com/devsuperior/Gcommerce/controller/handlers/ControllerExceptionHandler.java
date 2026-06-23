@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -87,6 +88,22 @@ public class ControllerExceptionHandler {
                                 Instant.now(),
                                 status.value(),
                                 "Você não tem permissão para acessar este recurso",
+                                request.getRequestURI());
+                return ResponseEntity.status(status).body(err);
+        }
+
+        /**
+         * 405 Method Not Allowed
+         */
+        @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+        public ResponseEntity<CustomErrorDTO> methodNotSupported(
+                        HttpRequestMethodNotSupportedException e,
+                        HttpServletRequest request) {
+                HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
+                CustomErrorDTO err = new CustomErrorDTO(
+                                Instant.now(),
+                                status.value(),
+                                "Método '" + e.getMethod() + "' não é suportado para este recurso",
                                 request.getRequestURI());
                 return ResponseEntity.status(status).body(err);
         }

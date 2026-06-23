@@ -8,13 +8,20 @@ import com.devsuperior.Gcommerce.entity.Order;
 import com.devsuperior.Gcommerce.entity.OrderItem;
 import com.devsuperior.Gcommerce.entity.OrderStatus;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class OrderDTO {
     private long id;
     private Instant moment;
     private OrderStatus status;
     private ClientDTO client;
     private PaymentDTO payment;
+
+    @NotEmpty(message = "Pelo menos um item deve ser associado ao pedido")
     private List<OrderItemDTO> items = new ArrayList<>();
+
+    public OrderDTO() {
+    }
 
     public OrderDTO(long id, Instant moment, OrderStatus status, ClientDTO client, PaymentDTO payment) {
         this.id = id;
