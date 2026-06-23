@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.devsuperior.Gcommerce.dto.CustomErrorDTO;
 import com.devsuperior.Gcommerce.dto.ValidationErrorDTO;
 import com.devsuperior.Gcommerce.services.exceptions.DatabaseException;
+import com.devsuperior.Gcommerce.services.exceptions.ForbiddenException;
 import com.devsuperior.Gcommerce.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.Gcommerce.services.exceptions.ValidationException;
 
@@ -88,6 +89,14 @@ public class ControllerExceptionHandler {
                                 Instant.now(),
                                 status.value(),
                                 "Você não tem permissão para acessar este recurso",
+                                request.getRequestURI());
+                return ResponseEntity.status(status).body(err);
+        }
+
+        @ExceptionHandler(ForbiddenException.class)
+        public ResponseEntity<CustomErrorDTO> forbidden(ForbiddenException e, HttpServletRequest request) {
+                HttpStatus status = HttpStatus.FORBIDDEN;
+                CustomErrorDTO err = new CustomErrorDTO(Instant.now(), status.value(), e.getMessage(),
                                 request.getRequestURI());
                 return ResponseEntity.status(status).body(err);
         }
